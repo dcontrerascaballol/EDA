@@ -8,6 +8,9 @@ Link a base SERVEL votacion https://oficial.servel.cl/resultados-provisorios-ple
 
 Los elementos de este trabajo solo se utilizan con fines educativos para generar aprendizaje en el uso de herramienta R para el analisis exploratorio de datos.
 
+La publicacion del respectivo analisis se publico en https://medium.com/@dcontrerascaballol/comportamiento-electoral-de-los-chilenos-y-chilenas-pos-estallido-social-97e90424b407 
+
+
 Trabajo realizado por
 Daniel Contreras Caballol
 Francisco Munoz 
