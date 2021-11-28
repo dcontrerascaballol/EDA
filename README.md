@@ -13,6 +13,6 @@ La publicacion del respectivo analisis se publico en https://medium.com/@dcontre
 
 Trabajo realizado por
 Daniel Contreras Caballol
-Francisco Munoz 
+Emilio Muñoz 
 Francisca Moya
 
