@@ -8,3 +8,8 @@ Link a base SERVEL votacion https://oficial.servel.cl/resultados-provisorios-ple
 
 Los elementos de este trabajo solo se utilizan con fines educativos para generar aprendizaje en el uso de herramienta R para el analisis exploratorio de datos.
 
+Trabajo realizado por
+Daniel Contreras Caballol
+Francisco Munoz 
+Francisca Moya
+
