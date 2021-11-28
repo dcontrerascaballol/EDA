@@ -11,8 +11,8 @@ Los elementos de este trabajo solo se utilizan con fines educativos para generar
 La publicacion del respectivo analisis se publico en https://medium.com/@dcontrerascaballol/comportamiento-electoral-de-los-chilenos-y-chilenas-pos-estallido-social-97e90424b407 
 
 
-Trabajo realizado por
-Daniel Contreras Caballol
-Emilio Muñoz 
-Francisca Moya
+Trabajo realizado por /n
+Daniel Contreras Caballol /n
+Emilio Muñoz /n
+Francisca Moya /n
 
