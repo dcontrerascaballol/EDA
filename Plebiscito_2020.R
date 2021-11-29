@@ -388,18 +388,306 @@ votaciones %>%
 #16 "De Tarapaca"                                       46.5
 #17 "De Antofagasta"                                    45.0
 
+# Edad promedio de votantes por region y genero (sexo)
+
+region_edad <-votaciones_ne %>% 
+  filter(Sufragio=='sufragó') %>% 
+  group_by(Region,Sexo) %>%
+  summarise(edad_prom= mean(Edad, na.rm=TRUE)) %>% 
+  arrange(desc(edad_prom))
+
+opciones_forma <- c('striped', "bordered", 'hover', 'condensed', 'responsive')
+
+knitr::kable(region_edad, booktabs = TRUE, caption = 'Edad Promedio de Sufragio por Genero') %>% 
+  kable_styling(bootstrap_options = opciones_forma, full_width = FALSE, font_size = 12)
+
+# Edad promedio de los que no votaron por region y genero (sexo)
+
+region_edad_no <-votaciones_ne %>% 
+  filter(Sufragio=='no sufragó') %>% 
+  group_by(Region,Sexo) %>%
+  summarise(edad_prom= mean(Edad, na.rm=TRUE)) %>% 
+  arrange(desc(edad_prom))
+
+opciones_forma <- c('striped', "bordered", 'hover', 'condensed', 'responsive')
+
+knitr::kable(region_edad_no, booktabs = TRUE, caption = 'Edad Promedio de Sufragio por Genero') %>% 
+  kable_styling(bootstrap_options = opciones_forma, full_width = FALSE, font_size = 12)
+
+#### Graficos de analisis ####
+
+# Sufragio por Edad # 
+
+voto_edad <- proportions(table (votaciones$Sufragio,votaciones$`Rango Edad`), margin=2)%>%
+  round(digits = 3)
+
+barplot(voto_edad, 
+        beside = TRUE, las=1, 
+        main = "Porcentaje de votación por grupo Etario",
+        xlab='Tramo Etario', ylab='Frecuencia relativa',
+        col = c("lightblue", "mistyrose"),
+        ylim = c(0, 1))
+legend('topleft', legend=rownames(voto_edad), bty='n',
+       fill=c("lightblue", "mistyrose"))
+
+library(flextable)
+
+# Tabla Participacion por Region
+
+votaciones_ne <- votaciones%>% filter(Region != "")
+
+votaciones_ne <- as.data.frame(votaciones_ne)
+
+ voto_reg_1 <-  proportions(table (votaciones_ne$Region,votaciones_ne$Sufragio), margin=2)%>%
+    round(digits = 3) 
+ opciones_forma <- c('striped', "bordered", 'hover', 'condensed', 'responsive')
+ 
+ knitr::kable(voto_reg_1 , booktabs = TRUE, caption = 'Porcentaje de votantes por Region') %>% 
+   kable_styling(bootstrap_options = opciones_forma, full_width = FALSE, font_size = 12)
+ 
+ # Grafico de participacion por region
+ 
+ voto_reg_2 <- proportions(table (votaciones_ne$Sufragio,votaciones_ne$Region), margin=2)%>%
+   round(digits = 3) 
+ 
+ barplot(voto_reg_2, 
+         beside = TRUE, las=1, 
+         main = "Porcentaje de votantes por Región en Plebiscito",
+         xlab='Región', ylab='Frecuencia relativa',
+         col = c("lightblue", "mistyrose"),
+         ylim = c(0, 1))
+ legend('topleft', legend=rownames(voto_reg_2), bty='n',
+        fill=c("lightblue", "mistyrose"))
+
+ # Promedio de edad por region 
+ 
+region_edad <- votaciones_ne %>% 
+   filter(Sufragio=='sufragó') %>% 
+   group_by(Region,Sexo) %>%
+   summarise(edad_prom= mean(Edad, na.rm=TRUE)) %>% 
+   ggplot(aes(x = Sexo, y = Cantidad, fill = Region)) + 
+   geom_bar(stat="identity", position="dodge") + 
+   labs(title = "Titulo")
+
+
+#Caso Magallanes
+
+maga <- votaciones_ne %>% 
+  filter(Sexo=="femenino" & Region=="De Magallanes Y De La Antartica Chilena")
+
+
+table(maga$Sufragio, maga$`Rango Edad`)
+
+
+#           18 a 19 20-24 25-29 30-34 35-39 40-44 45-49 50-54 55-59 60-64
+#no sufragó     900  2286  2729  3160  3464  3296  3487  3375  3862  3563
+#sufragó       1262  3168  3437  3835  3310  3184  3065  2990  3151  2545
+
+#             65-69 70-74 75-79 80 o +
+#no sufragó  3091  2711  2353   4554
+#sufragó     1624   972   585    390
+
+table(maga$Sufragio)
+
+#no sufragó    sufragó 
+#42831      33518 
+
+prop.table(table(maga$Sufragio))
+#no sufragó    sufragó 
+#0.5609897  0.4390103 
+
+grup <- ggplot(data = maga, aes(x = `Rango Edad`, y = ..count.., fill = Sufragio)) +
+  geom_bar() +
+  scale_fill_manual(values = c("#9BBB5C", "#7C5CBB")) +
+  labs(title = "Tramo Etario Magallanes Femenino") +
+  theme_bw() +
+  theme(legend.position = "bottom")
+
+grup
+
+mujeres<- votaciones_ne %>% 
+  filter(Sexo=="femenino")
+
+table(mujeres$Region,mujeres$Sufragio)
+
+prop.table(table(mujeres$Region,mujeres$Sufragio), margin = 2)
+
+
+prop.table(table(mujeres$Sufragio))
+
+# Para profundizar en el componente geografico se genera una nueva variable
+#haciendo consideracion a nivel de zonas del pais
+
+zonaNorte = c(
+  "De Arica Y Parinacota",
+  "De Tarapaca",
+  "De Antofagasta",
+  "De Atacama",
+  "De Coquimbo")
+
+zonaCentro = c(
+  "De Valparaiso",
+  "Metropolitana De Santiago",
+  "Del Libertador General Bernardo O'Higgins",
+  "Del Maule",
+  "De Ñuble",
+  "Del Biobio")
+
+zonaSur = c(
+  "De La Araucania",
+  "De Los Rios",
+  "De Los Lagos",
+  "De Aysen Del General Carlos Ibañez Del Campo", 
+  "De Magallanes Y De La Antartica Chilena")
+
+votaciones_ne <- votaciones_ne %>% 
+  mutate(ZonaPais = ifelse(Region %in% zonaNorte, "Norte", ifelse(Region %in% zonaCentro, "Centro", "Sur")))
+
+votaciones_ne$ZonaPais <- as.factor(votaciones_ne$ZonaPais )
+
+table(votaciones_ne$Sufragio, votaciones_ne$ZonaPais)
+
+prop.table(table(votaciones_ne$Sufragio, votaciones_ne$ZonaPais), margin=2)
+
+grup_2 <- ggplot(data = votaciones_ne, aes(x = ZonaPais, y = ..count.., fill = Sufragio)) +
+  geom_bar() +
+  scale_fill_manual(values = c("darkblue", "darkgreen")) +
+  labs(title = "Participación por Zona del Pais") +
+  scale_y_continuous(breaks=seq(300000, 11000000, 3000000))+ 
+  theme_light() +
+  theme(legend.position = "bottom")
+
+grup_2
+
+# Representacion de nivel de participacion a nivel de comuna
+
+co <- prop.table(table(votaciones_ne$Comuna, votaciones_ne$Sufragio), margin=1)
+
+co <- as.data.frame(co)
+colnames(co)<- c('Comuna', 'Sufra', 'Votac')
+
+co %>% 
+  filter(Sufra == 'sufragó') %>% 
+  group_by(Comuna) %>% 
+  summarise(Suma=sum(Votac)) %>% 
+  arrange(desc(Suma))
+
+# Representacion del nivel de abstencion
+
+co %>% 
+  filter(Sufra == 'no sufragó') %>% 
+  group_by(Comuna) %>% 
+  summarise(Suma=sum(Votac)) %>% 
+  arrange(desc(Suma))
+
+co %>% 
+  filter(Sufra == 'no sufragó') %>% 
+  group_by(Comuna) %>% 
+  summarise(Suma=sum(Votac)) %>% 
+  arrange(desc(Suma))
+
+
 #### Tratamiento de bases para inferencias ####
 
-votaciones <- votaciones %>% 
+votaciones_pre <- votaciones_ne %>% 
   select(-Cedula, -DV, -Votaron)
 
+# Se "damiza" la variable Sexo (genero) y Sufragio#
+
+votaciones_pre<- votaciones_pre %>% 
+  mutate(Genero = ifelse(Sexo == "femenino", 1, 0), Voto = ifelse(Sufragio == "sufragó", 1, 0)) 
+
+# se genera tabla de resumen de votacion total por comuna y se pasa a data frame
+sufra_comuna <- table(votaciones_pre$Comuna,votaciones_pre$Sufragio )
+sufra_comuna <- as.data.frame(sufra_comuna)
+colnames(sufra_comuna)<- c('Comuna', 'Sufra', 'Votac')
+
+# se genera tabla de resumen de votacion femenina por comuna y se pasa a data frame
+
+voto_mujeres<- votaciones_ne %>% 
+  filter(Sufragio == 'sufragó' & Sexo =='femenino') %>% 
+  group_by(Comuna) %>% 
+  summarise(Voto_fem=sum(Votaron)) 
+
+# se genera tabla de resumen de votacion masculina por comuna y se pasa a data frame
+
+voto_hom <- votaciones_ne %>% 
+  filter(Sufragio == 'sufragó' & Sexo =='masculino') %>% 
+  group_by(Comuna) %>% 
+  summarise(Voto_masc=sum(Votaron)) 
+
+votos_agru <- voto_mujeres %>% inner_join(voto_hom, by="Comuna")
+
+# se genera data con comuna y promedio de edad
+voto_edad<- votaciones_ne %>% 
+  filter(Sufragio == 'sufragó')%>% 
+  group_by(Comuna) %>% 
+  summarise(promediom=sum(Edad)) 
+
+votos_agru_edad <- votos_agru %>% inner_join(voto_edad, by="Comuna")
+
+#Dado a que el nivel de participacion esta en relacion con el N que sufrago,
+# se selecciona esta variable, algunos lo pudieran discutir y sen~alar que debiese verse 
+# en valores porcentuales
+
+si_sufra_comuna <- sufra_comuna %>% 
+  filter(Sufra=='sufragó')
+
+votos <- votos_agru_edad %>% inner_join(si_sufra_comuna, by="Comuna")
+
+votos <- votos %>% 
+  select(-Sufra)
+
+votos <- votos %>% 
+  rename(Promedio_edad=Promedio, Votos_total=Votac)
+
+
+# Se integra la base con el numero de votos de Apruebo y niveles de pobreza
 
 library(readxl)
-plebiscito <- read_excel("Resultados Plebiscito Constitucion Politica 2020.xlsx", sheet = 'Chile')
+plebiscito <- read_excel("Resultados Plebiscito Constitucion Politica 2020.xlsx", sheet = 'Comuna')
 
 glimpse(plebiscito)
 
-plebiscito <- plebiscito %>% 
-  select(Región,Provincia,Comuna,`Opción Constitución Política`,`Votos TRICEL`) %>% 
-  rename(Opcion=`Opción Constitución Política`, Votos=`Votos TRICEL`)
+base <- plebiscito %>% 
+  select(Comuna,APRUEBO, 
+         `Número de personas en situación de pobreza multidimensional`,
+         `Número de personas en situación de pobreza por ingresos`) %>% 
+  rename(Comuna=Comuna, Apruebo= APRUEBO, Multidimensional=`Número de personas en situación de pobreza multidimensional`,
+         Ingreso=`Número de personas en situación de pobreza por ingresos`)
 
+# Posterior a realizar conversiones de nombre para su mejor entendimiento
+# se hace un inner join a las bases
+
+
+votaciones_predict <- votos %>%  inner_join(base, by = 'Comuna')
+
+votaciones_predict$Comuna <- as.factor(votaciones_predict$Comuna)
+
+# Dejamos a la comuna como variable de observacion
+
+regre <- data.frame(votaciones_predict[,-1], row.names = votaciones_predict$Comuna)
+
+# Revisamos eventuales correlaciones
+
+library(GGally)
+ggpairs(regre, lower = list(continuous = "smooth"),
+        diag = list(continuous = "barDiag"), axisLabels = "none")
+
+# Se genera el modelo
+
+modelo <- lm(Votos_total ~ Multidimensional + Ingreso + Promedio_edad, data = regre)
+summary(modelo)
+
+# se seleccionan los mejores predictores
+
+step(object = modelo, direction = "both", trace = 1)
+
+
+#Aprendizaje
+
+# Se profundiza la necesidad de generar un proceso por etapas y pasos que permitan
+# analizar las variables incorporando elementos adicionales, asi como,
+# la necesidad de mejorar el uso de elementos visuales que faciliten la comprension
+# de la infromacion que se presenta. 
+# Con mayor nivel de conocimientos, se debio o escalar las dimensiones dado su diversa magnitud 
