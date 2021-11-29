@@ -6,6 +6,8 @@ Link a base SERVEL participacion https://www.kaggle.com/tagotero/chile-plebiscit
 
 Link a base SERVEL votacion https://oficial.servel.cl/resultados-provisorios-plebiscito-nacional-2020/
 
+Link a base de datos de Observatorio Social http://observatorio.ministeriodesarrollosocial.gob.cl/pobreza-comunal-2017
+
 Los elementos de este trabajo solo se utilizan con fines educativos para generar aprendizaje en el uso de herramienta R para el analisis exploratorio de datos.
 
 La publicacion del respectivo analisis se publico en https://medium.com/@dcontrerascaballol/comportamiento-electoral-de-los-chilenos-y-chilenas-pos-estallido-social-97e90424b407 
